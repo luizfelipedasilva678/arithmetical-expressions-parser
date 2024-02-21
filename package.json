@@ -1,0 +1,14 @@
+{
+  "name": "shunting-yard-algorithm",
+  "version": "1.0.0",
+  "description": "Shunting Yard algorithm implementation to convert infix expressions into posfix expressions",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "scripts": {
+    "ts-node": "ts-node"
+  }
+}
