@@ -1,6 +1,8 @@
 import Stack from "../stack";
 import * as constants from "../constants";
 
+class InvalidExpressionError extends Error {}
+
 export default class ShuntingYard {
   private operatorsStack = new Stack<string>();
   private operandsStack = new Stack<number>();
@@ -52,10 +54,14 @@ export default class ShuntingYard {
     while (operator !== constants.LEFT_PARENTHESIS) {
       outputList.push(operator ?? "");
       operator = this.operatorsStack.pop();
+
+      if (this.operatorsStack.isEmpty()) {
+        throw new InvalidExpressionError("Invalid expression");
+      }
     }
   }
 
-  public transform(expression: string) {
+  private transform(expression: string) {
     this.operatorsStack.clear();
     const tokens = this.tokenizeUserInput(expression);
     const outputList: string[] = [];
@@ -90,7 +96,9 @@ export default class ShuntingYard {
     const operand2 = this.operandsStack.pop();
     const operand1 = this.operandsStack.pop();
 
-    if (!operand1 || !operand2) return 0;
+    if (!operand1 || !operand2) {
+      throw new InvalidExpressionError("Invalid expression");
+    }
 
     switch (token) {
       case constants.ASTERISK: {
@@ -118,7 +126,7 @@ export default class ShuntingYard {
 
   public resolve(expression: string) {
     this.operandsStack.clear();
-    const tokens = this.tokenizePostfixExp(expression);
+    const tokens = this.tokenizePostfixExp(this.transform(expression));
 
     for (const token of tokens) {
       if (!this.isOperator(token)) {
@@ -127,6 +135,10 @@ export default class ShuntingYard {
       }
 
       this.resolveOperation(token);
+    }
+
+    if (this.operandsStack.size() > 1) {
+      throw new InvalidExpressionError("Invalid expression");
     }
 
     return this.operandsStack.pop() ?? null;
