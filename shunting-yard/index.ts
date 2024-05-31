@@ -86,7 +86,13 @@ export default class ShuntingYard {
     }
 
     while (!this.operatorsStack.isEmpty()) {
-      outputList.push(this.operatorsStack.pop() ?? "");
+      const operator = this.operatorsStack.pop();
+
+      if (operator == constants.LEFT_PARENTHESIS) {
+        throw new InvalidExpressionError("Invalid expression");
+      }
+
+      outputList.push(operator ?? "");
     }
 
     return outputList.join("");
@@ -127,8 +133,6 @@ export default class ShuntingYard {
   public resolve(expression: string) {
     this.operandsStack.clear();
     const tokens = this.tokenizePostfixExp(this.transform(expression));
-
-    console.log(tokens);
 
     for (const token of tokens) {
       if (!this.isOperator(token)) {
