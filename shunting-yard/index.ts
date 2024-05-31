@@ -15,12 +15,12 @@ export default class ShuntingYard {
   };
 
   private tokenizeUserInput(expression: string) {
-    const pattern = new RegExp(/(\d)+|-|\*|\(|\)|\^|\+|\||\?|\//, "g");
+    const pattern = new RegExp(/(\d\.?)+|-|\*|\(|\)|\^|\+|\||\?|\//, "g");
     return expression.trim().match(pattern) ?? [];
   }
 
   private tokenizePostfixExp(expression: string) {
-    const pattern = new RegExp(/;|(\d)+|-|\*|\^|\+|\||\?|\//, "g");
+    const pattern = new RegExp(/;|(\d\.?)+|-|\*|\^|\+|\||\?|\//, "g");
     return expression.match(pattern)?.filter((tok) => tok !== ";") ?? [];
   }
 
@@ -127,6 +127,8 @@ export default class ShuntingYard {
   public resolve(expression: string) {
     this.operandsStack.clear();
     const tokens = this.tokenizePostfixExp(this.transform(expression));
+
+    console.log(tokens);
 
     for (const token of tokens) {
       if (!this.isOperator(token)) {
