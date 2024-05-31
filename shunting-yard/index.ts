@@ -12,9 +12,14 @@ export default class ShuntingYard {
     [constants.PLUS]: 1,
   };
 
-  private tokenize(expression: string) {
-    const pattern = new RegExp(/\w|\d|-|\*|\(|\)|\^|\+|\||\?|\//, "g");
-    return expression.match(pattern) ?? [];
+  private tokenizeUserInput(expression: string) {
+    const pattern = new RegExp(/(\d)+|-|\*|\(|\)|\^|\+|\||\?|\//, "g");
+    return expression.trim().match(pattern) ?? [];
+  }
+
+  private tokenizePostfixExp(expression: string) {
+    const pattern = new RegExp(/;|(\d)+|-|\*|\^|\+|\||\?|\//, "g");
+    return expression.match(pattern)?.filter((tok) => tok !== ";") ?? [];
   }
 
   private isOperator(token: string) {
@@ -52,7 +57,7 @@ export default class ShuntingYard {
 
   public transform(expression: string) {
     this.operatorsStack.clear();
-    const tokens = this.tokenize(expression);
+    const tokens = this.tokenizeUserInput(expression);
     const outputList: string[] = [];
 
     for (const token of tokens) {
@@ -71,7 +76,7 @@ export default class ShuntingYard {
         continue;
       }
 
-      outputList.push(token);
+      outputList.push(`${token};`);
     }
 
     while (!this.operatorsStack.isEmpty()) {
@@ -113,7 +118,7 @@ export default class ShuntingYard {
 
   public resolve(expression: string) {
     this.operandsStack.clear();
-    const tokens = this.tokenize(expression);
+    const tokens = this.tokenizePostfixExp(expression);
 
     for (const token of tokens) {
       if (!this.isOperator(token)) {
