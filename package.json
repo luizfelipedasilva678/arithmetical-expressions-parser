@@ -5,10 +5,13 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^20.13.0",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.3.3"
   },
   "scripts": {
-    "ts-node": "ts-node"
+    "ts-node": "ts-node",
+    "test": "node -r ts-node/register -r tsconfig-paths/register --test ./src/tests/*.test.ts"
   }
 }
