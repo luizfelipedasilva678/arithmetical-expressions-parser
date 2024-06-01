@@ -16,6 +16,10 @@ class Lexer {
     this.tokenize();
   }
 
+  public getToken(): Token | undefined {
+    return this.tokens.shift();
+  }
+
   private isDigit(char: string): boolean {
     return !isNaN(Number(char));
   }
