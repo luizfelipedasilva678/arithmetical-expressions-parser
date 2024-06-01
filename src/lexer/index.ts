@@ -77,7 +77,10 @@ class Lexer {
         break;
       }
       case "-": {
-        if (this.isDigit(this.input[this.inputPos - 1])) {
+        if (
+          this.isDigit(this.input[this.inputPos - 1]) ||
+          this.input[this.inputPos - 1] === ")"
+        ) {
           this.tokens.push(
             new Operator(
               this.input[this.inputPos],
