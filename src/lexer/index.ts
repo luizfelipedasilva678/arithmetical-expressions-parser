@@ -1,4 +1,5 @@
 import Token from "./token";
+import LexerException from "./lexer-error";
 import Parenthesis, { ParenthesisType } from "./parenthesis";
 import Operator, { Associativity, Precedence } from "./operator";
 import NumberLiteral from "./number-literal";
@@ -33,15 +34,20 @@ class Lexer {
 
       if (this.isDigit(symbol)) {
         this.makeNumber();
+        continue;
       }
 
       if (this.isOperator(symbol)) {
         this.makeOperator();
+        continue;
       }
 
       if (this.isParenthesis(symbol)) {
         this.makeParenthesis();
+        continue;
       }
+
+      throw new LexerException(`Uknown symbol: ${symbol}`);
     }
   }
 
