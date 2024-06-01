@@ -13,62 +13,48 @@ class Evaluator {
     this.parser = parser;
   }
 
-  getOperands(quantity: 1 | 2) {
-    if (quantity === 1) {
-      const operand = this.stack.pop();
+  private handleOperator(token: Token) {
+    const operator = token as Operator;
+    let operand1: number | undefined = undefined;
+    let operand2: number | undefined = undefined;
 
-      if (!operand) {
+    if (operator.getValue() === "#") {
+      operand2 = this.stack.pop();
+
+      if (!operand2) {
         throw new EvaluatorException("Invalid expression");
       }
 
-      return operand;
-    }
-
-    if (quantity === 2) {
-      const operand2 = this.stack.pop();
-      const operand1 = this.stack.pop();
+      this.stack.push(-operand2);
+    } else {
+      operand2 = this.stack.pop();
+      operand1 = this.stack.pop();
 
       if (!operand1 || !operand2) {
         throw new EvaluatorException("Invalid expression");
       }
 
-      return [operand1, operand2];
-    }
-  }
-
-  private handleOperator(token: Token) {
-    const operator = token as Operator;
-
-    switch (operator.getValue()) {
-      case "#": {
-        const operand = this.getOperands(1) as number;
-        this.stack.push(-operand);
-        break;
-      }
-      case "+": {
-        const [operand1, operand2] = this.getOperands(2) as number[];
-        this.stack.push(operand1 + operand2);
-        break;
-      }
-      case "-": {
-        const [operand1, operand2] = this.getOperands(2) as number[];
-        this.stack.push(operand1 - operand2);
-        break;
-      }
-      case "*": {
-        const [operand1, operand2] = this.getOperands(2) as number[];
-        this.stack.push(operand1 * operand2);
-        break;
-      }
-      case "/": {
-        const [operand1, operand2] = this.getOperands(2) as number[];
-        this.stack.push(operand1 / operand2);
-        break;
-      }
-      case "^": {
-        const [operand1, operand2] = this.getOperands(2) as number[];
-        this.stack.push(Math.pow(operand1, operand2));
-        break;
+      switch (operator.getValue()) {
+        case "+": {
+          this.stack.push(operand1 + operand2);
+          break;
+        }
+        case "-": {
+          this.stack.push(operand1 - operand2);
+          break;
+        }
+        case "*": {
+          this.stack.push(operand1 * operand2);
+          break;
+        }
+        case "/": {
+          this.stack.push(operand1 / operand2);
+          break;
+        }
+        case "^": {
+          this.stack.push(Math.pow(operand1, operand2));
+          break;
+        }
       }
     }
   }

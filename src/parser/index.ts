@@ -3,6 +3,7 @@ import Token from "../lexer/token";
 import Stack from "../data-structures/stack";
 import Operator, { Associativity } from "../lexer/operator";
 import Parenthesis, { ParenthesisType } from "../lexer/parenthesis";
+import ParserException from "./parser-error";
 
 class Parser {
   private stack: Stack<Token> = new Stack();
@@ -38,17 +39,26 @@ class Parser {
     if (token.getType() === ParenthesisType.LEFT) {
       this.stack.push(token);
     } else {
-      while (!this.stack.isEmpty()) {
-        const operator = this.stack.pop()!;
-
-        if (
+      let operator = this.stack.pop();
+      while (
+        operator &&
+        !(
           operator instanceof Parenthesis &&
           operator.getType() === ParenthesisType.LEFT
-        ) {
-          break;
-        }
-
+        )
+      ) {
         this.output.push(operator);
+        operator = this.stack.pop();
+
+        if (
+          this.stack.isEmpty() &&
+          !(
+            operator instanceof Parenthesis &&
+            operator.getType() === ParenthesisType.LEFT
+          )
+        ) {
+          throw new ParserException("Missing parenthesis");
+        }
       }
     }
   }
