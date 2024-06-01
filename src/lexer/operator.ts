@@ -11,7 +11,7 @@ export enum Precedence {
   ASTERISK = 2,
   SLASH = 2,
   CARET = 3,
-  NEG = 4,
+  NEG = 3,
 }
 
 class Operator extends Token {
