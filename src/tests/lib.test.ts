@@ -164,4 +164,38 @@ describe("lib", () => {
 
     assert.equal(evaluator.evaluate(), 23.7);
   });
+
+  it("should result in 25.308936000000003", () => {
+    const lexer = new Lexer(
+      "(10.222336 + 5.133 + (2.44 ^ 2 + (2))) * 1 -1 * -2"
+    );
+    const parser = new Parser(lexer);
+    const evaluator = new Evaluator(parser);
+
+    assert.equal(evaluator.evaluate(), 25.308936000000003);
+  });
+
+  it("should result in 5000", () => {
+    const lexer = new Lexer("1000 * 5");
+    const parser = new Parser(lexer);
+    const evaluator = new Evaluator(parser);
+
+    assert.equal(evaluator.evaluate(), 5000);
+  });
+
+  it("should result in 32100", () => {
+    const lexer = new Lexer("1000 + 1000 + 100 + 30000");
+    const parser = new Parser(lexer);
+    const evaluator = new Evaluator(parser);
+
+    assert.equal(evaluator.evaluate(), 32100);
+  });
+
+  it("should result in 31900", () => {
+    const lexer = new Lexer("1000 + 1000 + -100 + 30000");
+    const parser = new Parser(lexer);
+    const evaluator = new Evaluator(parser);
+
+    assert.equal(evaluator.evaluate(), 31900);
+  });
 });
