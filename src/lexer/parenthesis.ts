@@ -1,8 +1,8 @@
 import Token from "./token";
 
 export enum ParenthesisType {
-  LEFT = "(",
-  RIGHT = ")",
+  LEFT = 1,
+  RIGHT = 2,
 }
 
 class Parenthesis extends Token {
@@ -12,6 +12,10 @@ class Parenthesis extends Token {
     super(value);
 
     this.type = type;
+  }
+
+  getType(): ParenthesisType {
+    return this.type;
   }
 }
 
