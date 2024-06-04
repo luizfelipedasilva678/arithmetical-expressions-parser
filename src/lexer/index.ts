@@ -98,9 +98,17 @@ class Lexer {
               Associativity.LEFT
             )
           );
-        } else {
+        } else if (this.isDigit(this.input[this.inputPos + 1])) {
           this.tokens.push(
             new Operator("#", Precedence.NEG, Associativity.RIGHT)
+          );
+        } else {
+          this.tokens.push(
+            new Operator(
+              this.input[this.inputPos],
+              Precedence.MINUS,
+              Associativity.RIGHT
+            )
           );
         }
         break;
