@@ -88,29 +88,26 @@ class Lexer {
       }
       case "-": {
         if (
-          this.isDigit(this.input[this.inputPos - 1]) ||
-          this.input[this.inputPos - 1] === ")"
+          (this.input[this.inputPos + 1] === "(" &&
+            !this.isDigit(this.input[this.inputPos - 1]) &&
+            this.input[this.inputPos - 1] !== ")") ||
+          (this.isDigit(this.input[this.inputPos + 1]) &&
+            !this.isDigit(this.input[this.inputPos - 1]) &&
+            this.input[this.inputPos - 1] !== ")")
         ) {
-          this.tokens.push(
-            new Operator(
-              this.input[this.inputPos],
-              Precedence.MINUS,
-              Associativity.LEFT
-            )
-          );
-        } else if (this.isDigit(this.input[this.inputPos + 1])) {
           this.tokens.push(
             new Operator("#", Precedence.NEG, Associativity.RIGHT)
           );
-        } else {
-          this.tokens.push(
-            new Operator(
-              this.input[this.inputPos],
-              Precedence.MINUS,
-              Associativity.RIGHT
-            )
-          );
+          break;
         }
+
+        this.tokens.push(
+          new Operator(
+            this.input[this.inputPos],
+            Precedence.MINUS,
+            Associativity.RIGHT
+          )
+        );
         break;
       }
       case "*": {
