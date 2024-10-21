@@ -30,7 +30,7 @@ class Evaluator {
       operand2 = this.stack.pop();
       operand1 = this.stack.pop();
 
-      if (!operand1 || !operand2) {
+      if (operand1 === undefined || operand2 === undefined) {
         throw new EvaluatorException("Invalid expression");
       }
 
